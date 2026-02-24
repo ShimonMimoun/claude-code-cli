@@ -1,0 +1,63 @@
+[project]
+name = "claude-code-internal"
+version = "0.1.0"
+description = "Internal deployment of Claude Code with Entra ID auth + Bedrock gateway."
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "pyjwt",
+  "msal",
+  "boto3",
+  "httpx",
+  "pydantic",
+  "cryptography",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ruff",
+  "pytest",
+  "pytest-cov",
+  "mypy",
+]
+
+[project.scripts]
+claude-agent = "claude_code_internal.client.agent:main"
+installer-windows = "claude_code_internal.client.installers.windows:main"
+installer-macos = "claude_code_internal.client.installers.macos:main"
+installer-linux = "claude_code_internal.client.installers.linux:main"
+mirror-claude-code = "claude_code_internal.tools.mirror_claude_code:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "W",    # pycodestyle warnings
+  "F",    # pyflakes
+  "I",    # isort
+  "UP",   # pyupgrade
+  "B",    # flake8-bugbear
+  "SIM",  # flake8-simplify
+  "N",    # pep8-naming
+  "RUF",  # ruff-specific
+]
+ignore = [
+  "UP007",  # allow Optional[X] for python 3.9 compat
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["claude_code_internal"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true

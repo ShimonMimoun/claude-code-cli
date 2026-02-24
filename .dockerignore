@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+*.dmg
+*.pkg
+*.exe
+# keep install_artifacts out of image; mount as volume in compose
+install_artifacts/
+.env
+.git/

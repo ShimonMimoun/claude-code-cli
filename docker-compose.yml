@@ -1,0 +1,31 @@
+services:
+  auth:
+    build: .
+    command: ["uvicorn", "claude_code_internal.servers.auth:app", "--host", "0.0.0.0", "--port", "8001"]
+    env_file:
+      - .env
+    ports:
+      - "${AUTH_PORT:-8001}:8001"
+
+  llm-gateway:
+    build: .
+    command: ["uvicorn", "claude_code_internal.servers.llm_gateway:app", "--host", "0.0.0.0", "--port", "8002"]
+    env_file:
+      - .env
+    ports:
+      - "${GATEWAY_PORT:-8002}:8002"
+    depends_on:
+      - auth
+
+  install-server:
+    build: .
+    command: ["uvicorn", "claude_code_internal.servers.install_server:app", "--host", "0.0.0.0", "--port", "8080"]
+    env_file:
+      - .env
+    environment:
+      - CLAUDE_CODE_INSTALL_ARTIFACTS_DIR=/app/install_artifacts
+    volumes:
+      - ./install_artifacts:/app/install_artifacts
+    ports:
+      - "${INSTALL_PORT:-8080}:8080"
+
